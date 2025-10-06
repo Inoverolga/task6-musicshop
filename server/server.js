@@ -1,69 +1,66 @@
-import express from "express"; //импортируем для создания сервера
-// Импортируем CORS для разрешения междоменных запросов (чтобы React мог общаться с сервером)
+import express from "express";
 import cors from "cors";
-// Импортируем роуты для песен из файла songs.js
 import routerSong from "./routes/routerSongs.js";
 
-// Создаем экземпляр Express приложения
 const app = express();
 
-// Middleware: разрешаем запросы с других доменов (от React приложения)
-app.use(
-  cors({
-    origin: [
-      "https://task6-musicshop-front.onrender.com",
-      "http://localhost:3000",
-      "http://localhost:3001",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  })
-);
-// Middleware: парсим JSON данные из запросов
+// SUPER SIMPLE CORS - РАБОТАЕТ 100%
+app.use(cors());
 app.use(express.json());
 
-// Подключаем маршруты для песен по пути /api/songs
-// Все запросы к /api/songs будут обрабатываться в songRoutes
-app.use("/api/songs", routerSong); // сами придумываем пути
-
-// Обработчик для главной страницы сервера (http://localhost:3001/)????
-app.get("/", (req, res) => {
-  res.json({
-    message: "Music Shop API",
-    endpoints: {
-      songs: "/api/songs?seed=123&page=1&language=en&limit=10",
-    },
-  });
-});
-
-// Устанавливаем порт для сервера (3001) или берем из переменных окружения
-const PORT = process.env.PORT || 3001;
-
-// Добавьте перед app.listen
+// Health check - ТОЛЬКО ОДИН РАЗ!
 app.get("/health", (req, res) => {
+  console.log("✅ Health check called");
   res.status(200).json({
     status: "OK",
-    message: "Server is running",
+    message: "Music Shop API is running!",
     timestamp: new Date().toISOString(),
   });
 });
 
+// Test endpoint - ДОБАВЬТЕ ЭТОТ
 app.get("/test", (req, res) => {
-  res.json({ message: "Test endpoint works!" });
-});
-
-app.use((req, res) => {
-  res.status(404).json({
-    error: "Endpoint not found",
-    requestedUrl: req.url,
-    availableEndpoints: ["GET /", "GET /health", "GET /test", "GET /api/songs"],
+  console.log("✅ Test endpoint called");
+  res.json({
+    message: "Test endpoint works!",
+    timestamp: new Date().toISOString(),
   });
 });
 
-// Запускаем сервер на указанном порту
+// Корневой endpoint
+app.get("/", (req, res) => {
+  console.log("✅ Root endpoint called");
+  res.json({
+    message: "🎵 Music Shop API",
+    endpoints: {
+      health: "/health",
+      test: "/test",
+      songs: "/api/songs?seed=123&page=1&language=en&limit=3",
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Подключаем маршруты для песен
+app.use("/api/songs", routerSong);
+
+// 404 handler - ТОЛЬКО ОДИН РАЗ В КОНЦЕ!
+app.use("*", (req, res) => {
+  console.log("❌ 404 - Not found:", req.originalUrl);
+  res.status(404).json({
+    error: "Endpoint not found",
+    requestedUrl: req.originalUrl,
+    availableEndpoints: ["/", "/health", "/test", "/api/songs"],
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Устанавливаем порт для Render.com
+const PORT = process.env.PORT || 10000;
+
+// Запускаем сервер
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📍 Health: http://localhost:${PORT}/health`);
+  console.log(`📍 Test: http://localhost:${PORT}/test`);
 });
