@@ -1,15 +1,7 @@
 import { Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import { useState } from "react";
 // Компонент Toolbar - панель управления для фильтрации и настройки данных
-const Toolbar = ({
-  params,
-  setParams,
-  viewStyle,
-  onViewModeChange,
-  onAverageQuantityLikesChange,
-  averageQuantityLikes,
-}) => {
-  const [inputLikes, setInputLikes] = useState(averageQuantityLikes || 5); // ← для отображения ввода, но без отправки на бэк
+const Toolbar = ({ params, setParams, viewStyle, onViewModeChange }) => {
   // - params: текущие параметры (объект с seed, language, likesPerSong)
   // - setParams: функция для обновления параметров
   // Обработчик изменения seed (пользователь не нажимает на кнопку)
@@ -42,19 +34,13 @@ const Toolbar = ({
     // - 30% песен имеют 3 лайка
     // Среднее: (4 * 0.7) + (3 * 0.3) = 3.7
     const value = e.target.value;
-    if (value === "" || /^\d*\.?\d*$/.test(value)) {
-      setInputLikes(value);
+    // Разрешаем числа, точку и пустую строку
+    // Разрешаем ввод чисел и точки
+    if (value === "" || /^-?\d*\.?\d*$/.test(value)) {
+      setParams((prev) => ({ ...prev, averageQuantityLikes: value }));
     }
   };
 
-  // При нажатии на enter преобразуем в число
-  const handleLikesKeyPress = (e) => {
-    // При нажатии Enter преобразуем в число
-    if (e.key === "Enter") {
-      const numericValue = parseFloat(e.target.value);
-      onAverageQuantityLikesChange(numericValue);
-    }
-  };
   // Возвращаем JSX разметку компонента
   return (
     <div className="toolbar-custom bg-white rounded-3 shadow-lg p-4 mb-4">
@@ -85,9 +71,8 @@ const Toolbar = ({
             </Form.Label>
             <Form.Control
               type="text"
-              value={inputLikes}
+              value={params.averageQuantityLikes}
               onChange={handleLikesChange}
-              onKeyDown={handleLikesKeyPress}
               className="border-danger"
             />
           </Form.Group>

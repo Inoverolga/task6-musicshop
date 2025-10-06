@@ -11,10 +11,15 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://music-shop-frontend.up.railway.app",
+      "https://task6-musicshop-front.onrender.com",
       "http://localhost:3000",
+      "http://localhost:3001",
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   })
 );
 // Middleware: парсим JSON данные из запросов
@@ -36,8 +41,29 @@ app.get("/", (req, res) => {
 
 // Устанавливаем порт для сервера (3001) или берем из переменных окружения
 const PORT = process.env.PORT || 3001;
+
+// Добавьте перед app.listen
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/test", (req, res) => {
+  res.json({ message: "Test endpoint works!" });
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Endpoint not found",
+    requestedUrl: req.url,
+    availableEndpoints: ["GET /", "GET /health", "GET /test", "GET /api/songs"],
+  });
+});
+
 // Запускаем сервер на указанном порту
-app.listen(PORT, () => {
-  // Выводим сообщение при успешном запуске
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

@@ -54,9 +54,10 @@ export const generateSongData = (seed, index, page, limit, language) => {
 };
 
 // Функция генерации только ЛАЙКОВ
-export const generateLikes = (seed, averageQuantityLikes) => {
+export const generateLikes = (songId, averageQuantityLikes) => {
   const baseLikes = Math.floor(averageQuantityLikes); // Базовое количество лайков - целая часть от среднего значения
   // Например: averageQuantityLikes = 3.7 → baseLikes = 3
+
   const fractionalPart = averageQuantityLikes - baseLikes; // Дробная часть определяет вероятность получения дополнительного лайка
   // Например: averageQuantityLikes = 3.7 → fractionalPart = 0.7
 
@@ -65,7 +66,10 @@ export const generateLikes = (seed, averageQuantityLikes) => {
   // 1. seed % 1000 - берем остаток от деления seed на 1000 (число от 0 до 999)
   // 2. / 1000 - нормализуем к диапазону 0.000 - 0.999
   // 3. Сравниваем с fractionalPart - если меньше, то добавляем лайк
-  const shouldAddLike = (seed % 1000) / 1000 < fractionalPart;
+
+  const shouldAddLike =
+    ((songId * 12345 + 67890) % 10000) / 10000 < fractionalPart;
+
   const additionalLike = shouldAddLike ? 1 : 0;
 
   return baseLikes + additionalLike; // Итоговое количество лайков
@@ -89,7 +93,7 @@ export const generateSongsPack = ({
 
     // Всегда генерируем данные заново, но гарантируем детерминированность
     const coreData = generateSongData(itemSeed, i, page, limit, language);
-    const likes = generateLikes(itemSeed + 100000, averageQuantityLikes);
+    const likes = generateLikes(coreData.id, averageQuantityLikes);
 
     // Объединяем данные и лайки в один объект
     const fullSongData = {

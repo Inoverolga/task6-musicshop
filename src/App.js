@@ -13,25 +13,24 @@ function App() {
   const [viewStyle, setViewMode] = useState("table"); // 'table' или 'gallery'
   const [currentPage, setCurrentPage] = useState(1); // Единая пагинация
   const [hasMore, setHasMore] = useState(true);
-  const [averageQuantityLikes, setAverageQuantityLikes] = useState(5); //state для лайков
   const [expandedRow, setExpandedRow] = useState(null); //  состояние для отслеживания раскрытой строки
+  const [galleryKey, setGalleryKey] = useState(0); // Ключ для сброса галереи
   const [params, setParams] = useState({
     // Состояние для хранения параметров запроса к API
     language: "en", // Язык данных (по умолчанию английский)
     seed: 123456, // Базовое значение для детерминированной генерации
     limit: 10, // Песен на странице
+    averageQuantityLikes: 5,
   });
 
   // Для Table- расчет страниц на основе ID
   const totalPages = Math.ceil(30 / params.limit);
-
-  // 🔥 ДОБАВЬ ЭТУ ФУНКЦИЮ ДЛЯ ОБНОВЛЕНИЯ ЛАЙКОВ
-  const handleAverageQuantityLikesChange = (newValue) => {
-    setAverageQuantityLikes(newValue);
-    // Также сбрасываем страницу при изменении лайков
-    setCurrentPage(1);
-    setHasMore(true);
-  };
+  useEffect(() => {
+    if (viewStyle === "gallery") {
+      // Сбросить scroll position
+      window.scrollTo(0, 0);
+    }
+  }, [params, viewStyle]);
 
   // Загружаем песни при изменении параметров или режима просмотров
   useEffect(() => {
@@ -43,13 +42,8 @@ function App() {
         const songsData = await fetchSongs({
           ...params,
           page: currentPage,
-          averageQuantityLikes: averageQuantityLikes,
         });
 
-        console.log("📤 Sending to backend:", {
-          averageQuantityLikes: averageQuantityLikes,
-          type: typeof averageQuantityLikes,
-        });
         if (viewStyle === "gallery" && currentPage > 1) {
           // Для галереи при дозагрузке - ДОБАВЛЯЕМ песни
           setSongs((prev) => [...prev, ...songsData]);
@@ -69,7 +63,7 @@ function App() {
     };
 
     loadSongs();
-  }, [params, currentPage, viewStyle, averageQuantityLikes]);
+  }, [params, currentPage, viewStyle]);
 
   // Загрузка дополнительных песен для GalleryView (бесконечный скролл)
   // Загрузка дополнительных песен для Gallery (не меняем params!)
@@ -85,6 +79,7 @@ function App() {
     setCurrentPage(1);
     setHasMore(true);
     setExpandedRow(null); //закрыть раскрытые строки
+    setGalleryKey((prev) => prev + 1); // Сброс галереи
   };
 
   // Обработчик смены страницы
@@ -99,6 +94,7 @@ function App() {
     setCurrentPage(1);
     setExpandedRow(null); // закрыть раскрытые строки
     setHasMore(true);
+    setGalleryKey((prev) => prev + 1); // Сброс галереи при любом изменении параметров
   };
   return (
     <div className="App music-app">
@@ -109,14 +105,14 @@ function App() {
           <p className="lead text-muted">Discover your next favorite song</p>
         </div>
 
-        <Toolbar
-          params={params}
-          setParams={handleParamsChange}
-          viewMode={viewStyle}
-          onViewModeChange={handleViewModeChange}
-          onAverageQuantityLikesChange={handleAverageQuantityLikesChange} // ← ДОБАВЬ
-          averageQuantityLikes={averageQuantityLikes} // ← ДОБАВЬ
-        />
+        <div className="sticky-top bg-white shadow-sm mb-3">
+          <Toolbar
+            params={params}
+            setParams={handleParamsChange}
+            viewMode={viewStyle}
+            onViewModeChange={handleViewModeChange}
+          />
+        </div>
 
         {loading && songs.length === 0 ? (
           <div className="text-center py-5">
@@ -134,6 +130,7 @@ function App() {
           />
         ) : (
           <Gallery
+            key={galleryKey} // Ключ для принудительного пересоздания
             songs={songs}
             onLoadMore={handleLoadMore}
             hasMore={hasMore}

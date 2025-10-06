@@ -25,16 +25,41 @@ const SongDetails = ({ song }) => {
   };
 
   const generateAlbumCover = (song) => {
-    //Функция генерации стилей для обложки альбома:
-    const hue = (song.id * 30) % 360;
+    // Используем Unsplash для разнообразия
+    const musicKeywords = [
+      "music",
+      "guitar",
+      "piano",
+      "microphone",
+      "headphones",
+      "vinyl",
+      "concert",
+      "dj",
+      "singer",
+      "drums",
+      "studio",
+      "music-studio",
+      "recording",
+      "live-music",
+      "band",
+      "orchestra",
+    ];
+
+    const keyword = musicKeywords[song.id % musicKeywords.length];
+    const unsplashUrl = `https://source.unsplash.com/400x400/?${keyword}&sig=${song.id}`;
+
     return {
-      background: `linear-gradient(135deg, 
-      hsl(${hue}, 70%, 60%) 0%, 
-      hsl(${hue + 30}, 80%, 40%) 100%)`,
-      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${unsplashUrl})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundBlendMode: "darken",
       minHeight: "200px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       position: "relative",
-      overflow: "hidden",
+      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+      border: "1px solid rgba(255,255,255,0.1)",
     };
   };
 
@@ -70,6 +95,29 @@ const SongDetails = ({ song }) => {
               style={generateAlbumCover(song)}
             >
               <div className="text-center">
+                <div
+                  className="music-icon mb-3"
+                  style={{
+                    fontSize: "3rem",
+                    opacity: 0.9,
+                    filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.5))",
+                  }}
+                >
+                  {
+                    [
+                      "🎵",
+                      "🎸",
+                      "🎹",
+                      "🎤",
+                      "🎧",
+                      "🥁",
+                      "🎷",
+                      "🎺",
+                      "🎻",
+                      "📻",
+                    ][song.id % 10]
+                  }
+                </div>
                 <h5 className="fw-bold mb-2 text-shadow">{song.title}</h5>
                 <p className="mb-1 text-shadow">{song.artist}</p>
                 {song.album !== "Single" && (

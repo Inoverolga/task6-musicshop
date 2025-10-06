@@ -20,12 +20,20 @@ routerSong.get("/", (req, res) => {
     console.log(`данные которые пришли на бэк`, req.query);
     // Генерируем пачку песен с полученными параметрами
     // +seed - преобразуем строку в число с помощью унарного плюса
+
+    let likesValue;
+    if (averageQuantityLikes === undefined || averageQuantityLikes === "") {
+      likesValue = 5; // значение по умолчанию только когда параметр не передан
+    } else {
+      likesValue = parseFloat(averageQuantityLikes);
+    }
+
     const pack = generateSongsPack({
       seed: +seed, // Преобразуем в число
       page: +page, // Преобразуем в число
       language, // Язык передаем как есть (строка)
       limit: +limit, // Преобразуем в число
-      averageQuantityLikes: parseFloat(averageQuantityLikes) || 5, // Передать в генератор
+      averageQuantityLikes: likesValue, // Передать в генератор
     });
 
     // Отправляем сгенерированные песни в формате JSON

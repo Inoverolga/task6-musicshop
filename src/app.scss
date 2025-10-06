@@ -16,7 +16,7 @@ $dark: #1e293b;
 }
 // Уникальные градиенты и анимации
 .music-app {
-  background: linear-gradient(135deg, #e7e9cf 0%, #e7ceb4 100%);
+  background: linear-gradient(135deg, #e7e9cf 0%, #73685d 100%);
   min-height: 100vh;
   padding: 20px 0;
 }
@@ -58,8 +58,8 @@ $dark: #1e293b;
     bottom: 0;
     background: linear-gradient(
       45deg,
-      rgba(139, 92, 246, 0.3),
-      rgba(236, 72, 153, 0.3)
+      rgba(74, 73, 75, 0.3),
+      rgba(201, 147, 174, 0.3)
     );
     z-index: 1;
   }

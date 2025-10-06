@@ -1,0 +1,8 @@
+static_sites:
+  - name: music-shop-frontend
+    env: static
+    buildCommand: npm run build && npm install -g serve && serve -s build -l 3000
+    publishDir: build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://music-shop-backend.onrender.com
