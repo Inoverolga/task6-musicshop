@@ -1,0 +1,87 @@
+.gallery-view {
+  padding: 20px;
+}
+
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.song-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.song-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.album-cover {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.cover-content {
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  padding: 10px;
+}
+
+.cover-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.cover-content p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.song-info {
+  padding: 15px;
+}
+
+.song-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.artist {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.album {
+  margin: 0 0 10px 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.song-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+}
+
+.infinite-loader,
+.infinite-end {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}

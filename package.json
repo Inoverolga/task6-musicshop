@@ -1,5 +1,5 @@
 {
-  "name": "music-shop",
+  "name": "music-shop--frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,9 +7,19 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.12.2",
+    "bootstrap": "^5.3.8",
+    "node-sass": "^7.0.3",
     "react": "^19.2.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-loading": "^2.0.3",
+    "react-paginate": "^8.3.0",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.17.0",
+    "tonal": "^6.4.2",
+    "tone": "^15.1.22",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
