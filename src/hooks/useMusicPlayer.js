@@ -94,6 +94,9 @@ const useMusicPlayer = () => {
 
       try {
         console.log("🎵 Starting playback for song:", song.id);
+        if (Tone.context.state !== "running") {
+          await Tone.context.resume();
+        }
         await Tone.start();
 
         currentSongRef.current = song.id;
