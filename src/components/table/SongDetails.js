@@ -62,7 +62,7 @@ const SongDetails = ({ song }) => {
                 />
 
                 <div
-                  className="position-absolute bottom-0 start-0 end-0 p-3"
+                  className="position-absolute top-0 start-0 end-0 p-3"
                   style={{
                     background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
                     borderBottomLeftRadius: "8px",
@@ -72,7 +72,7 @@ const SongDetails = ({ song }) => {
                   <h6
                     className="text-white mb-1 fw-bold"
                     style={{
-                      fontSize: "0.9rem",
+                      fontSize: "1.1rem",
                       textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
                     }}
                   >
@@ -81,7 +81,7 @@ const SongDetails = ({ song }) => {
                   <p
                     className="text-white mb-0"
                     style={{
-                      fontSize: "0.75rem",
+                      fontSize: "0.9rem",
                       textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
                     }}
                   >
