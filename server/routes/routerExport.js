@@ -7,11 +7,9 @@ const routerExport = express.Router();
 routerExport.get("/", async (req, res) => {
   try {
     const { seed = 123456, page = 1, language = "en", limit = 10 } = req.query;
-
     const songs = generateSongsPack({ seed, page, language, limit });
     const zip = new JSZip();
 
-    // Для каждой песни создаем текстовый файл (вместо MP3)
     songs.forEach((song, index) => {
       const content = `
 Song: ${song.title}

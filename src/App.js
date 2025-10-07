@@ -8,34 +8,28 @@ import { BeatLoader } from "react-spinners";
 import "./app.scss";
 
 function App() {
-  const [songs, setSongs] = useState([]); // Состояние для хранения массива песен, полученных с сервера
+  const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [viewStyle, setViewMode] = useState("table"); // 'table' или 'gallery'
-  const [currentPage, setCurrentPage] = useState(1); // Единая пагинация
+  const [viewStyle, setViewMode] = useState("table");
+  const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [expandedRow, setExpandedRow] = useState(null); //  состояние для отслеживания раскрытой строки
-  const [galleryKey, setGalleryKey] = useState(0); // Ключ для сброса галереи
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [galleryKey, setGalleryKey] = useState(0);
   const [params, setParams] = useState({
-    // Состояние для хранения параметров запроса к API
-    language: "en", // Язык данных (по умолчанию английский)
-    seed: 123456, // Базовое значение для детерминированной генерации
-    limit: 10, // Песен на странице
+    language: "en",
+    seed: 123456,
+    limit: 10,
     averageQuantityLikes: 5,
   });
 
-  // Для Table- расчет страниц на основе ID
   const totalPages = Math.ceil(30 / params.limit);
   useEffect(() => {
     if (viewStyle === "gallery") {
-      // Сбросить scroll position
       window.scrollTo(0, 0);
     }
   }, [params, viewStyle]);
 
-  // Загружаем песни при изменении параметров или режима просмотров
   useEffect(() => {
-    // Хук useEffect для выполнения побочных эффектов (загрузка данных)
-    // Срабатывает при каждом изменении params (зависимость [params])
     const loadSongs = async () => {
       setLoading(true);
       try {
@@ -45,18 +39,14 @@ function App() {
         });
 
         if (viewStyle === "gallery" && currentPage > 1) {
-          // Для галереи при дозагрузке - ДОБАВЛЯЕМ песни
           setSongs((prev) => [...prev, ...songsData]);
         } else {
-          // Для таблицы ИЛИ первой загрузки - ЗАМЕНЯЕМ песни
           setSongs(songsData);
         }
 
-        // Проверяем, есть ли еще данные
         setHasMore(songsData.length === params.limit);
       } catch (error) {
         setHasMore(false);
-        console.error("Failed to load songs:", error);
       } finally {
         setLoading(false);
       }
@@ -65,41 +55,33 @@ function App() {
     loadSongs();
   }, [params, currentPage, viewStyle]);
 
-  // Загрузка дополнительных песен для GalleryView (бесконечный скролл)
-  // Загрузка дополнительных песен для Gallery (не меняем params!)
   const handleLoadMore = () => {
     setCurrentPage((prev) => prev + 1);
   };
 
-  // Смена режима просмотра (Table ↔ Gallery)
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
-    // Сбрасываем страницы при смене режима
-    // Сбрасываем страницы при смене режима
     setCurrentPage(1);
     setHasMore(true);
-    setExpandedRow(null); //закрыть раскрытые строки
-    setGalleryKey((prev) => prev + 1); // Сброс галереи
+    setExpandedRow(null);
+    setGalleryKey((prev) => prev + 1);
   };
 
-  // Обработчик смены страницы
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  // Обработчик изменения параметров из тулбара
   const handleParamsChange = (newParams) => {
     setParams(newParams);
-    // Сбрасываем страницы при изменении параметров
+
     setCurrentPage(1);
-    setExpandedRow(null); // закрыть раскрытые строки
+    setExpandedRow(null);
     setHasMore(true);
-    setGalleryKey((prev) => prev + 1); // Сброс галереи при любом изменении параметров
+    setGalleryKey((prev) => prev + 1);
   };
   return (
     <div className="App music-app">
       <Container fluid="lg">
-        {/* Уникальный заголовок */}
         <div className="text-center mb-5">
           <h1 className="display-4 fw-bold gradient-title">🎵 Music Shop</h1>
           <p className="lead text-muted">Discover your next favorite song</p>
@@ -130,7 +112,7 @@ function App() {
           />
         ) : (
           <Gallery
-            key={galleryKey} // Ключ для принудительного пересоздания
+            key={galleryKey}
             songs={songs}
             onLoadMore={handleLoadMore}
             hasMore={hasMore}

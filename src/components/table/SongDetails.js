@@ -1,31 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Button, Card } from "react-bootstrap";
 import useMusicPlayer from "../../hooks/useMusicPlayer";
+import LyricsDisplay from "./LyricsDisplay";
 
 const SongDetails = ({ song }) => {
   const { playPreview, stopPlayback, isPlaying } = useMusicPlayer();
-  // playPreview - функция для начала воспроизведения
-  // stopPlayback - функция для остановки воспроизведения
-  // isPlaying - состояние, указывающее играет ли музыка сейчас
-  const [currentSongId, setCurrentSongId] = useState(null); // Состояние для отслеживания какой трек сейчас играет
+
+  const [currentSongId, setCurrentSongId] = useState(null);
+
+  const [lyricsTime, setLyricsTime] = useState(0);
+  const [isLyricsPlaying, setIsLyricsPlaying] = useState(false);
+
+  useEffect(() => {
+    let interval;
+    if (isLyricsPlaying) {
+      interval = setInterval(() => {
+        setLyricsTime((prev) => {
+          if (prev >= 18) {
+            clearInterval(interval);
+            setIsLyricsPlaying(false);
+            return 0;
+          }
+          return prev + 0.1;
+        });
+      }, 100);
+    }
+    return () => clearInterval(interval);
+  }, [isLyricsPlaying]);
+
+  const handleLyricsPlay = () => {
+    if (isLyricsPlaying) {
+      setIsLyricsPlaying(false);
+      setLyricsTime(0);
+    } else {
+      setIsLyricsPlaying(true);
+    }
+  };
 
   const handlePlay = () => {
-    // Обработчик клика по кнопке воспроизведения/остановки
     if (isPlaying && currentSongId === song.id) {
-      // Обработчик клика по кнопке воспроизведения/остановки
       stopPlayback();
+      setIsLyricsPlaying(false);
     } else {
-      // Остановить текущее воспроизведение если играет другая песня
       if (isPlaying) {
         stopPlayback();
       }
-      playPreview(song); // Иначе начинаем воспроизведение текущей песни
-      setCurrentSongId(song.id); // Запоминаем ID текущей играющей песни
+      playPreview(song);
+      setCurrentSongId(song.id);
     }
   };
 
   const generateAlbumCover = (song) => {
-    // Используем Unsplash для разнообразия
     const musicKeywords = [
       "music",
       "guitar",
@@ -64,7 +89,6 @@ const SongDetails = ({ song }) => {
   };
 
   const generateReview = (song) => {
-    // Функция генерации текста ревью:
     const reviews = [
       `"${song.title}" is an incredible track that showcases ${
         song.artist
@@ -77,10 +101,7 @@ const SongDetails = ({ song }) => {
     return reviews[song.id % reviews.length];
   };
 
-  // Проверяем, играет ли сейчас именно эта песня
   const isThisSongPlaying = isPlaying && currentSongId === song.id;
-  // Если играет песня #5, то только у нее будет "Stop Preview",
-  // а у остальных - "Play Preview"
 
   return (
     <Card
@@ -138,10 +159,27 @@ const SongDetails = ({ song }) => {
                 >
                   {isThisSongPlaying ? "⏹️ Stop Preview" : "▶️ Play Preview"}
                 </Button>
+
+                <Button
+                  variant={
+                    isLyricsPlaying ? "outline-danger" : "outline-primary"
+                  }
+                  size="lg"
+                  onClick={handleLyricsPlay}
+                >
+                  {isLyricsPlaying ? "⏹️ Stop Lyrics" : "🎵 Play with Lyrics"}
+                </Button>
               </div>
               <div className="flex-grow-1">
                 <h6 className="text-muted mb-3">Review</h6>
                 <p className="text-muted lh-base">{generateReview(song)}</p>
+                <div className="mt-4">
+                  <LyricsDisplay
+                    song={song}
+                    currentTime={lyricsTime}
+                    isPlaying={isLyricsPlaying}
+                  />
+                </div>
               </div>
             </div>
           </Col>
@@ -152,5 +190,3 @@ const SongDetails = ({ song }) => {
 };
 
 export default SongDetails;
-
-//Текст ревью (Review Text) - это текст музыкального обзора или отзыва о песне, который генерируется автоматически для каждой композиции.

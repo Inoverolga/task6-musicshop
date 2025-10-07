@@ -1,20 +1,18 @@
-// Кастомные переменные Bootstrap - ПРАВИЛЬНЫЙ СИНТАКСИС
-$primary: #dc2626; // Красный винил
-$secondary: #000000; // Черный
-$success: #16a34a; // Зеленый
-$info: #2563eb; // Синий
-$warning: #d97706; // Оранжевый
-$danger: #b91c1c; // Темно-красный
+$primary: #dc2626;
+$secondary: #000000;
+$success: #16a34a;
+$info: #2563eb;
+$warning: #d97706;
+$danger: #b91c1c;
 $light: #f8fafc;
 $dark: #1e293b;
 
-// Импорт Bootstrap после кастомных переменных
 @import "~bootstrap/scss/bootstrap";
 
 .text-shadow {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
-// Уникальные градиенты и анимации
+
 .music-app {
   background: linear-gradient(135deg, #e7e9cf 0%, #73685d 100%);
   min-height: 100vh;
@@ -29,7 +27,6 @@ $dark: #1e293b;
   font-weight: 800;
 }
 
-// Кастомные карточки
 .song-card-custom {
   border: none;
   border-radius: 16px;
@@ -44,7 +41,6 @@ $dark: #1e293b;
   }
 }
 
-// Уникальные обложки альбомов
 .album-cover-custom {
   position: relative;
   overflow: hidden;
@@ -71,7 +67,6 @@ $dark: #1e293b;
   }
 }
 
-// Анимированные элементы
 @keyframes float {
   0%,
   100% {
@@ -86,13 +81,11 @@ $dark: #1e293b;
   animation: float 3s ease-in-out infinite;
 }
 
-// Кастомные стили для тулбара
 .toolbar-custom {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-// Кастомные стили для таблицы
 .table-custom {
   thead th {
     border-bottom: 2px solid $primary;

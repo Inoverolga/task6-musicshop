@@ -1,15 +1,8 @@
-// Импортируем компонент InfiniteScroll для реализации бесконечной прокрутки
 import InfiniteScroll from "react-infinite-scroll-component";
 import { BeatLoader } from "react-spinners";
 import { Row, Col, Card } from "react-bootstrap";
 
-//import "./gallery.scss";
-
 const Gallery = ({ songs, onLoadMore, hasMore }) => {
-  // - songs: массив песен для отображения
-  // - onLoadMore: функция для загрузки следующих данных при прокрутке
-  // - hasMore: булево значение, есть ли еще данные для загрузки
-  // Функция для получения красивой обложки с Unsplash
   const getAlbumCover = (song) => {
     const musicThemes = [
       "album-cover",
@@ -36,7 +29,6 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
     return `https://source.unsplash.com/600x600/?${theme}&music&sig=${song.id}`;
   };
 
-  // Функция для получения музыкальной иконки
   const getMusicIcon = (songId) => {
     const icons = ["🎵", "🎸", "🎹", "🎤", "🎧", "🥁", "🎷", "🎺", "🎻", "📻"];
     return icons[songId % icons.length];
@@ -44,25 +36,20 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
 
   return (
     <InfiniteScroll
-      dataLength={songs.length} // Текущее количество загруженных элементов
-      next={onLoadMore} // Функция, которая вызывается когда пользователь прокручивает к концу
-      // Загружает следующую порцию данных
-      hasMore={hasMore} // Флаг, указывающий есть ли еще данные для загрузки, Если false - показывается endMessage
+      dataLength={songs.length}
+      next={onLoadMore}
+      hasMore={hasMore}
       loader={
-        // Компонент который показывается во время загрузки новых данных
         <div className="infinite-loader">
           <BeatLoader color="#dc2626" size={15} />
           <h4>Loading more songs...</h4>
         </div>
       }
-      // Сообщение которое показывается когда все данные загружены
       endMessage={
         <div className="infinite-end">
           <p>🎉 You've reached the end! No more songs.</p>
         </div>
       }
-      // Порог срабатывания загрузки (в долях от высоты контейнера)
-      // 0.8 = загрузка начнется когда до конца останется 80% высоты видимой области
       scrollThreshold={0.8}
     >
       <Row className="g-3">
@@ -75,7 +62,6 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
                 backdropFilter: "blur(10px)",
               }}
             >
-              {/* Порядковый номер в левом верхнем углу */}
               <div className="position-absolute top-0 start-0 m-2 z-3">
                 <span
                   className="badge"
@@ -89,7 +75,6 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
                 </span>
               </div>
 
-              {/* Иконка инструмента в правом верхнем углу */}
               <div
                 className="position-absolute top-0 end-0 m-2 z-3"
                 style={{
@@ -101,7 +86,6 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
                 {getMusicIcon(song.id)}
               </div>
 
-              {/* Красивая обложка с Unsplash */}
               <div
                 className="album-cover-custom position-relative"
                 style={{
@@ -114,7 +98,6 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
                   borderBottom: "1px solid #dee2e6",
                 }}
               >
-                {/* Текст поверх обложки */}
                 <div className="position-absolute bottom-0 start-0 w-100 p-3">
                   <Card.Title
                     className="fw-bold mb-1 text-dark"
@@ -131,7 +114,6 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
                 </div>
               </div>
 
-              {/* Тело карточки */}
               <Card.Body className="d-flex flex-column p-3">
                 <div className="mb-2">
                   <Card.Text

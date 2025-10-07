@@ -10,14 +10,6 @@ const Table = ({
   expandedRow,
   setExpandedRow,
 }) => {
-  //songs - это массив песен, который приходит из API (бэкенда). для одной страницы
-  // т.е. когда отправили запрос через axios, получили response.data
-  //     [
-  //   { id: 1, song: "Electric Dreams", artist: "John Doe", ... },
-  //   { id: 2, song: "Summer Rain", artist: "Jane Smith", ... },
-  //    ...
-  // ]
-
   const handleRowToggle = (songId) => {
     setExpandedRow(expandedRow === songId ? null : songId);
   };

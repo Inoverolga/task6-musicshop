@@ -23,9 +23,9 @@ const useMusicPlayer = () => {
     const scale = Scale.get(scaleName).notes;
 
     const progressions = [
-      [0, 3, 4, 5], // I-IV-V-vi
-      [0, 4, 5, 3], // I-V-vi-IV
-      [5, 3, 0, 4], // vi-IV-I-V
+      [0, 3, 4, 5],
+      [0, 4, 5, 3],
+      [5, 3, 0, 4],
     ];
     const progression = progressions[seed % progressions.length];
 
@@ -53,9 +53,6 @@ const useMusicPlayer = () => {
   };
 
   const stopPlayback = useCallback(() => {
-    console.log("🛑 Stopping playback");
-
-    // Останавливаем все последовательности
     if (sequenceRef.current) {
       sequenceRef.current.melodySequence?.stop();
       sequenceRef.current.drumSequence?.stop();
@@ -63,11 +60,8 @@ const useMusicPlayer = () => {
       sequenceRef.current = null;
     }
 
-    // Останавливаем Transport
-    Tone.Transport.stop();
-    Tone.Transport.cancel();
+    Tone.getTransport().stop();
 
-    // Уничтожаем синтезаторы
     if (synthRef.current) {
       synthRef.current.dispose();
       synthRef.current = null;
@@ -93,18 +87,11 @@ const useMusicPlayer = () => {
       }
 
       try {
-        console.log("🎵 Starting playback for song:", song.id);
-        const context = Tone.getContext();
-        // Если контекст приостановлен, возобновляем его
-        if (context && context.state === "suspended") {
-          await context.resume();
-        }
         await Tone.start();
 
         currentSongRef.current = song.id;
         setIsPlaying(true);
 
-        // Создаем разные инструменты
         const synth = new Tone.PolySynth(Tone.Synth).toDestination();
         const drum = new Tone.MembraneSynth().toDestination();
         const bass = new Tone.MonoSynth({
@@ -116,13 +103,9 @@ const useMusicPlayer = () => {
         drumRef.current = drum;
         bassRef.current = bass;
 
-        // Генерируем мелодию и паттерны
         const { melody } = createMelody(song.id);
         const drumPattern = createDrumPattern(song.id + 1000);
 
-        console.log("✅ Now playing:", melody);
-
-        // Создаем последовательности
         const melodySequence = new Tone.Sequence(
           (time, note) => {
             if (note) synth.triggerAttackRelease(note, "0.3", time);
@@ -150,15 +133,13 @@ const useMusicPlayer = () => {
           "1n"
         );
 
-        // Запускаем последовательности
-        Tone.Transport.start();
+        Tone.getTransport().start();
         melodySequence.start();
         drumSequence.start();
         bassSequence.start();
 
         sequenceRef.current = { melodySequence, drumSequence, bassSequence };
 
-        // Авто-стоп через 8 секунд
         setTimeout(() => {
           if (currentSongRef.current === song.id) {
             stopPlayback();
@@ -172,7 +153,6 @@ const useMusicPlayer = () => {
     [isPlaying, stopPlayback]
   );
 
-  // Очистка при размонтировании
   useEffect(() => {
     return () => {
       stopPlayback();
