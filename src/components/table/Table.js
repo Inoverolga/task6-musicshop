@@ -5,10 +5,12 @@ import ExpandableRow from "./ExpandableRows";
 const Table = ({
   songs,
   currentPage,
-  totalPages,
   onPageChange,
   expandedRow,
   setExpandedRow,
+  hasMore,
+  onLoadMore,
+  language,
 }) => {
   const handleRowToggle = (songId) => {
     setExpandedRow(expandedRow === songId ? null : songId);
@@ -37,6 +39,7 @@ const Table = ({
                     className="text-center"
                     key={item.id}
                     song={item}
+                    language={language}
                     isExpanded={expandedRow === item.id}
                     onToggle={() => handleRowToggle(item.id)}
                   />
@@ -48,20 +51,20 @@ const Table = ({
             <Card.Footer className="bg-light px-4">
               <div className="d-flex justify-content-between align-items-center">
                 <small className="text-muted">
-                  Page {currentPage} of {totalPages} • {songs.length} songs
+                  Page {currentPage} • {songs.length} songs
                 </small>
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={totalPages}
                   onPageChange={onPageChange}
                 />
               </div>
             </Card.Footer>
           )}
-          {songs.length === 0 && (
-            <div className="text-center py-5 text-muted">
-              <h5>No songs found</h5>
-              <p>Adjust your search parameters</p>
+          {hasMore && (
+            <div className="text-center mt-3">
+              <button className="btn btn-primary" onClick={onLoadMore}>
+                Load More Songs
+              </button>
             </div>
           )}
         </Card.Body>

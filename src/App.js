@@ -22,7 +22,6 @@ function App() {
     averageQuantityLikes: 5,
   });
 
-  const totalPages = Math.ceil(30 / params.limit);
   useEffect(() => {
     if (viewStyle === "gallery") {
       window.scrollTo(0, 0);
@@ -69,6 +68,7 @@ function App() {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+    setExpandedRow(null);
   };
 
   const handleParamsChange = (newParams) => {
@@ -79,6 +79,8 @@ function App() {
     setHasMore(true);
     setGalleryKey((prev) => prev + 1);
   };
+
+  const visiblePagesForTable = hasMore ? currentPage + 5 : currentPage;
   return (
     <div className="App music-app">
       <Container fluid="lg">
@@ -105,10 +107,11 @@ function App() {
           <Table
             songs={songs}
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={visiblePagesForTable}
             onPageChange={handlePageChange}
             expandedRow={expandedRow}
             setExpandedRow={setExpandedRow}
+            language={params.language}
           />
         ) : (
           <Gallery
@@ -116,6 +119,7 @@ function App() {
             songs={songs}
             onLoadMore={handleLoadMore}
             hasMore={hasMore}
+            language={params.language}
           />
         )}
       </Container>

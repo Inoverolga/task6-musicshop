@@ -1,6 +1,6 @@
 import SongDetails from "./SongDetails";
 
-const ExpandableRow = ({ song, isExpanded, onToggle }) => {
+const ExpandableRow = ({ song, isExpanded, onToggle, language }) => {
   return (
     <>
       <tr onClick={onToggle} style={{ cursor: "pointer" }}>
@@ -24,7 +24,7 @@ const ExpandableRow = ({ song, isExpanded, onToggle }) => {
       {isExpanded && (
         <tr>
           <td colSpan="7" className="p-0 border-top-0">
-            <SongDetails song={song} />
+            <SongDetails song={song} language={language} />
           </td>
         </tr>
       )}

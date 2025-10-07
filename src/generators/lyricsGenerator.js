@@ -1,24 +1,30 @@
-export const generateLyrics = (songId) => {
-  const lyricsPool = [
-    "In the silence of the night I wait for you",
-    "Every heartbeat echoes through the empty room",
-    "Memories dance like shadows on the wall",
-    "Your voice still echoes, answering my call",
-    "Through the darkness I can see your light",
-    "Guiding me through this endless night",
-    "Whispers of love carried on the breeze",
-    "Rustling through the midnight trees",
-  ];
+import { fakerEN, fakerDE, fakerES } from "@faker-js/faker";
+
+export const generateLyrics = (songId, language = "en") => {
+  const faker =
+    {
+      en: fakerEN,
+      de: fakerDE,
+      es: fakerES,
+    }[language] || fakerEN;
+
+  faker.seed(songId);
+
+  const lineCount = 4 + (songId % 4);
 
   const selectedLyrics = [];
-  for (let i = 0; i < 6; i++) {
-    const index = (songId + i * 7) % lyricsPool.length;
-    selectedLyrics.push(lyricsPool[index]);
+  for (let i = 0; i < lineCount; i++) {
+    const wordCount = 3 + ((songId + i) % 6);
+    const line = faker.lorem.words({ min: wordCount, max: wordCount });
+    selectedLyrics.push(line);
   }
+
+  const totalDuration = 8.0;
+  const lineDuration = totalDuration / lineCount;
 
   return selectedLyrics.map((text, index) => ({
     text,
-    time: index * 3,
-    duration: 2.5,
+    time: index * lineDuration * 0.8,
+    duration: lineDuration * 1.2,
   }));
 };

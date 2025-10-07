@@ -1,39 +1,10 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import { BeatLoader } from "react-spinners";
 import { Row, Col, Card } from "react-bootstrap";
+import useAlbumCover from "../../hooks/useAlbumCover.js";
 
-const Gallery = ({ songs, onLoadMore, hasMore }) => {
-  const getAlbumCover = (song) => {
-    const musicThemes = [
-      "album-cover",
-      "vinyl-record",
-      "music-production",
-      "concert",
-      "music-studio",
-      "guitar",
-      "piano",
-      "drums",
-      "microphone",
-      "headphones",
-      "dj",
-      "singer",
-      "band-performance",
-      "jazz-club",
-      "rock-concert",
-      "hip-hop",
-      "electronic-music",
-      "classical-music",
-    ];
-
-    const theme = musicThemes[song.id % musicThemes.length];
-    return `https://source.unsplash.com/600x600/?${theme}&music&sig=${song.id}`;
-  };
-
-  const getMusicIcon = (songId) => {
-    const icons = ["🎵", "🎸", "🎹", "🎤", "🎧", "🥁", "🎷", "🎺", "🎻", "📻"];
-    return icons[songId % icons.length];
-  };
-
+const Gallery = ({ songs, onLoadMore, hasMore, language }) => {
+  const { getAlbumCoverUrl } = useAlbumCover();
   return (
     <InfiniteScroll
       dataLength={songs.length}
@@ -76,23 +47,10 @@ const Gallery = ({ songs, onLoadMore, hasMore }) => {
               </div>
 
               <div
-                className="position-absolute top-0 end-0 m-2 z-3"
-                style={{
-                  fontSize: "3.5rem",
-                  opacity: 0.9,
-                  filter: "drop-shadow(1px 1px 2px rgba(0,0,0,0.3))",
-                }}
-              >
-                {getMusicIcon(song.id)}
-              </div>
-
-              <div
                 className="album-cover-custom position-relative"
                 style={{
                   height: "160px",
-                  backgroundImage: `linear-gradient(rgba(226, 223, 223, 0.91), rgba(39, 38, 38, 0.3)), url(${getAlbumCover(
-                    song
-                  )})`,
+                  backgroundImage: `url(${getAlbumCoverUrl(song)})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   borderBottom: "1px solid #dee2e6",

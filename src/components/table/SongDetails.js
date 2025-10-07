@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Button, Card } from "react-bootstrap";
 import useMusicPlayer from "../../hooks/useMusicPlayer";
 import LyricsDisplay from "./LyricsDisplay";
+import useAlbumCover from "../../hooks/useAlbumCover";
 
 const SongDetails = ({ song }) => {
   const { playPreview, stopPlayback, isPlaying, currentPlaybackTime } =
     useMusicPlayer();
   const [currentSongId, setCurrentSongId] = useState(null);
+  const [review, setReview] = useState("");
+  const { getAlbumCoverUrl } = useAlbumCover();
 
   const handlePlay = () => {
     if (isPlaying && currentSongId === song.id) {
@@ -19,47 +22,15 @@ const SongDetails = ({ song }) => {
       setCurrentSongId(song.id);
     }
   };
-
-  const generateAlbumCover = (song) => {
-    const musicKeywords = [
-      "music",
-      "guitar",
-      "piano",
-      "microphone",
-      "headphones",
-      "vinyl",
-      "concert",
-      "dj",
-      "singer",
-      "drums",
-    ];
-
-    const keyword = musicKeywords[song.id % musicKeywords.length];
-    const unsplashUrl = `https://source.unsplash.com/400x400/?${keyword}&sig=${song.id}`;
-
-    return {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${unsplashUrl})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      minHeight: "200px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    };
-  };
-
-  const generateReview = (song) => {
-    const reviews = [
-      `"${song.title}" showcases ${
-        song.artist
-      }'s unique ${song.genre.toLowerCase()} style.`,
-      `A masterpiece from ${song.artist}! Perfect ${song.genre} composition.`,
-      `This ${song.genre.toLowerCase()} track from ${
-        song.artist
-      } is captivating.`,
-    ];
-    return reviews[song.id % reviews.length];
-  };
+  useEffect(() => {
+    if (!song) return;
+    const reviewText = `"${song.title}" by ${
+      song.artist
+    } is a ${song.genre.toLowerCase()} ${
+      song.album === "Single" ? "single" : "track"
+    } that showcases their unique musical style.`;
+    setReview(reviewText);
+  }, [song]);
 
   const isThisSongPlaying = isPlaying && currentSongId === song.id;
 
@@ -72,30 +43,22 @@ const SongDetails = ({ song }) => {
         <Row className="align-items-stretch">
           <Col md={4}>
             <div
-              className="album-cover rounded p-4 text-white text-center d-flex flex-column justify-content-center"
-              style={generateAlbumCover(song)}
+              className="album-cover p-4 text-center mt-3 ms-3 rounded d-flex flex-column justify-content-center"
+              style={{
+                background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)",
+                minHeight: "200px",
+              }}
             >
-              <div className="text-center">
-                <div className="music-icon mb-3" style={{ fontSize: "3rem" }}>
-                  {
-                    [
-                      "🎵",
-                      "🎸",
-                      "🎹",
-                      "🎤",
-                      "🎧",
-                      "🥁",
-                      "🎷",
-                      "🎺",
-                      "🎻",
-                      "📻",
-                    ][song.id % 10]
-                  }
-                </div>
-                <h5 className="fw-bold mb-2">{song.title}</h5>
-                <p className="mb-1">{song.artist}</p>
-                {song.album !== "Single" && <small>{song.album}</small>}
-              </div>
+              <img
+                src={getAlbumCoverUrl(song)}
+                alt={`${song.title} cover`}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                }}
+              />
             </div>
           </Col>
           <Col md={8}>
@@ -116,7 +79,7 @@ const SongDetails = ({ song }) => {
 
               <div className="flex-grow-1">
                 <h6 className="text-muted mb-2">Review</h6>
-                <p className="text-muted">{generateReview(song)}</p>
+                <p className="text-muted">{review}</p>
 
                 <LyricsDisplay
                   song={song}
