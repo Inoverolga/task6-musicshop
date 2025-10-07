@@ -1,5 +1,5 @@
 import { Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import { useState } from "react";
+import ExportButton from "../exportButton/ExportButton";
 // Компонент Toolbar - панель управления для фильтрации и настройки данных
 const Toolbar = ({ params, setParams, viewStyle, onViewModeChange }) => {
   // - params: текущие параметры (объект с seed, language, likesPerSong)
@@ -108,6 +108,14 @@ const Toolbar = ({ params, setParams, viewStyle, onViewModeChange }) => {
               <option value="table">📊 Table</option>
               <option value="gallery">🎨 Gallery</option>
             </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col md={2}>
+          <Form.Group>
+            <Form.Label className="fw-bold text-info small">
+              💾 Export
+            </Form.Label>
+            <ExportButton params={params} />
           </Form.Group>
         </Col>
       </Row>
