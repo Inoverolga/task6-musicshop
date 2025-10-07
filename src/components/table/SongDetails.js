@@ -43,22 +43,52 @@ const SongDetails = ({ song }) => {
         <Row className="align-items-stretch">
           <Col md={4}>
             <div
-              className="album-cover p-4 text-center mt-3 ms-3 rounded d-flex flex-column justify-content-center"
+              className="album-cover p-4 text-center mt-3 ms-3 rounded d-flex flex-column justify-content-center position-relative"
               style={{
                 background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)",
                 minHeight: "200px",
               }}
             >
-              <img
-                src={getAlbumCoverUrl(song)}
-                alt={`${song.title} cover`}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                }}
-              />
+              <div className="position-relative">
+                <img
+                  src={getAlbumCoverUrl(song)}
+                  alt={`${song.title} cover`}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                  }}
+                />
+
+                <div
+                  className="position-absolute bottom-0 start-0 end-0 p-3"
+                  style={{
+                    background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
+                    borderBottomLeftRadius: "8px",
+                    borderBottomRightRadius: "8px",
+                  }}
+                >
+                  <h6
+                    className="text-white mb-1 fw-bold"
+                    style={{
+                      fontSize: "0.9rem",
+                      textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                    }}
+                  >
+                    {song.title}
+                  </h6>
+                  <p
+                    className="text-white mb-0"
+                    style={{
+                      fontSize: "0.75rem",
+                      textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                    }}
+                  >
+                    {song.artist}
+                  </p>
+                </div>
+              </div>
             </div>
           </Col>
           <Col md={8}>
