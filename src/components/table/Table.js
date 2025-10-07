@@ -30,18 +30,19 @@ const Table = ({
             <BootstrapTable striped hover className="mb-0">
               <thead className="table-dark">
                 <tr>
-                  <th className="text-center">#</th>
+                  <th>#</th>
                   <th>Song</th>
                   <th>Artist</th>
                   <th>Album</th>
                   <th>Genre</th>
-                  <th className="text-center">Likes</th>
-                  <th className="text-center">Duration</th>
+                  <th>Likes</th>
+                  <th>Duration</th>
                 </tr>
               </thead>
               <tbody>
                 {songs.map((item) => (
                   <ExpandableRow
+                    className="text-center"
                     key={item.id}
                     song={item}
                     isExpanded={expandedRow === item.id}

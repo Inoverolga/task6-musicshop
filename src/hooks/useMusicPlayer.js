@@ -94,8 +94,10 @@ const useMusicPlayer = () => {
 
       try {
         console.log("🎵 Starting playback for song:", song.id);
-        if (Tone.context.state !== "running") {
-          await Tone.context.resume();
+        const context = Tone.getContext();
+        // Если контекст приостановлен, возобновляем его
+        if (context && context.state === "suspended") {
+          await context.resume();
         }
         await Tone.start();
 

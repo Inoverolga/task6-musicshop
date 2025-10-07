@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import routerSong from "./routes/routerSongs.js";
+import routerExport from "./routes/routerExport.js";
 
 const app = express();
 
@@ -27,6 +28,10 @@ app.get("/test", (req, res) => {
   });
 });
 
+// Подключаем маршруты для песен
+app.use("/api/songs", routerSong);
+app.use("/api/export", routerExport);
+
 // Корневой endpoint
 app.get("/", (req, res) => {
   console.log("✅ Root endpoint called");
@@ -36,13 +41,11 @@ app.get("/", (req, res) => {
       health: "/health",
       test: "/test",
       songs: "/api/songs?seed=123&page=1&language=en&limit=3",
+      export: "/api/export?seed=123&page=1&language=en&limit=10",
     },
     timestamp: new Date().toISOString(),
   });
 });
-
-// Подключаем маршруты для песен
-app.use("/api/songs", routerSong);
 
 // 404 handler - ТОЛЬКО ОДИН РАЗ В КОНЦЕ!
 app.use("*", (req, res) => {
