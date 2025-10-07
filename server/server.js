@@ -9,6 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Диагностика импортов - ДОБАВЬТЕ ЭТО
+console.log("=== SERVER DIAGNOSTICS ===");
+console.log("✅ routerSongs imported:", !!routerSong);
+console.log("✅ routerExport imported:", !!routerExport);
+console.log("=== END DIAGNOSTICS ===");
+
 // Health check - ТОЛЬКО ОДИН РАЗ!
 app.get("/health", (req, res) => {
   console.log("✅ Health check called");
