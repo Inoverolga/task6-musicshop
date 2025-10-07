@@ -1,5 +1,5 @@
 import { Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import ExportButton from "../exportButton/ExportButton";
+import ExportButton from "../exportButton/ExportButton.js";
 
 // Компонент Toolbar - панель управления для фильтрации и настройки данных
 const Toolbar = ({ params, setParams, viewStyle, onViewModeChange }) => {
