@@ -4,7 +4,8 @@ import useMusicPlayer from "../../hooks/useMusicPlayer";
 import LyricsDisplay from "./LyricsDisplay";
 
 const SongDetails = ({ song }) => {
-  const { playPreview, stopPlayback, isPlaying } = useMusicPlayer();
+  const { playPreview, stopPlayback, isPlaying, currentPlaybackTime } =
+    useMusicPlayer();
 
   const [currentSongId, setCurrentSongId] = useState(null);
 
@@ -176,7 +177,7 @@ const SongDetails = ({ song }) => {
                 <div className="mt-4">
                   <LyricsDisplay
                     song={song}
-                    currentTime={lyricsTime}
+                    currentTime={currentPlaybackTime}
                     isPlaying={isLyricsPlaying}
                   />
                 </div>

@@ -4,11 +4,13 @@ import { Scale, Chord } from "tonal";
 
 const useMusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentPlaybackTime, setCurrentPlaybackTime] = useState(0);
   const synthRef = useRef(null);
   const drumRef = useRef(null);
   const bassRef = useRef(null);
   const sequenceRef = useRef(null);
   const currentSongRef = useRef(null);
+  const timeIntervalRef = useRef(null);
 
   const createMelody = (seed) => {
     const scales = [
@@ -61,6 +63,7 @@ const useMusicPlayer = () => {
     }
 
     Tone.getTransport().stop();
+    setCurrentPlaybackTime(0);
 
     if (synthRef.current) {
       synthRef.current.dispose();
@@ -91,6 +94,7 @@ const useMusicPlayer = () => {
 
         currentSongRef.current = song.id;
         setIsPlaying(true);
+        setCurrentPlaybackTime(0);
 
         const synth = new Tone.PolySynth(Tone.Synth).toDestination();
         const drum = new Tone.MembraneSynth().toDestination();
@@ -133,6 +137,12 @@ const useMusicPlayer = () => {
           "1n"
         );
 
+        timeIntervalRef.current = setInterval(() => {
+          if (Tone.getTransport().state === "started") {
+            setCurrentPlaybackTime(Tone.getTransport().seconds);
+          }
+        }, 100);
+
         Tone.getTransport().start();
         melodySequence.start();
         drumSequence.start();
@@ -163,6 +173,7 @@ const useMusicPlayer = () => {
     playPreview,
     stopPlayback,
     isPlaying,
+    currentPlaybackTime,
   };
 };
 
