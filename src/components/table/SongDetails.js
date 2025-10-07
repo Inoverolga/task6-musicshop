@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Row, Col, Button, Card } from "react-bootstrap";
 import useMusicPlayer from "../../hooks/useMusicPlayer";
 import LyricsDisplay from "./LyricsDisplay";
@@ -6,42 +6,11 @@ import LyricsDisplay from "./LyricsDisplay";
 const SongDetails = ({ song }) => {
   const { playPreview, stopPlayback, isPlaying, currentPlaybackTime } =
     useMusicPlayer();
-
   const [currentSongId, setCurrentSongId] = useState(null);
-
-  const [lyricsTime, setLyricsTime] = useState(0);
-  const [isLyricsPlaying, setIsLyricsPlaying] = useState(false);
-
-  useEffect(() => {
-    let interval;
-    if (isLyricsPlaying) {
-      interval = setInterval(() => {
-        setLyricsTime((prev) => {
-          if (prev >= 18) {
-            clearInterval(interval);
-            setIsLyricsPlaying(false);
-            return 0;
-          }
-          return prev + 0.1;
-        });
-      }, 100);
-    }
-    return () => clearInterval(interval);
-  }, [isLyricsPlaying]);
-
-  const handleLyricsPlay = () => {
-    if (isLyricsPlaying) {
-      setIsLyricsPlaying(false);
-      setLyricsTime(0);
-    } else {
-      setIsLyricsPlaying(true);
-    }
-  };
 
   const handlePlay = () => {
     if (isPlaying && currentSongId === song.id) {
       stopPlayback();
-      setIsLyricsPlaying(false);
     } else {
       if (isPlaying) {
         stopPlayback();
@@ -63,12 +32,6 @@ const SongDetails = ({ song }) => {
       "dj",
       "singer",
       "drums",
-      "studio",
-      "music-studio",
-      "recording",
-      "live-music",
-      "band",
-      "orchestra",
     ];
 
     const keyword = musicKeywords[song.id % musicKeywords.length];
@@ -78,26 +41,22 @@ const SongDetails = ({ song }) => {
       backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${unsplashUrl})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      backgroundBlendMode: "darken",
       minHeight: "200px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      position: "relative",
-      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-      border: "1px solid rgba(255,255,255,0.1)",
     };
   };
 
   const generateReview = (song) => {
     const reviews = [
-      `"${song.title}" is an incredible track that showcases ${
+      `"${song.title}" showcases ${
         song.artist
-      }'s unique style. The ${song.genre.toLowerCase()} elements blend perfectly with the melodic structure.`,
-      `A masterpiece from ${song.artist}! ${song.title} demonstrates why they're one of the most innovative artists in the ${song.genre} scene.`,
-      `This ${song.genre.toLowerCase()} gem from ${song.artist}'s ${
-        song.album === "Single" ? "latest release" : song.album
-      } is absolutely captivating.`,
+      }'s unique ${song.genre.toLowerCase()} style.`,
+      `A masterpiece from ${song.artist}! Perfect ${song.genre} composition.`,
+      `This ${song.genre.toLowerCase()} track from ${
+        song.artist
+      } is captivating.`,
     ];
     return reviews[song.id % reviews.length];
   };
@@ -117,14 +76,7 @@ const SongDetails = ({ song }) => {
               style={generateAlbumCover(song)}
             >
               <div className="text-center">
-                <div
-                  className="music-icon mb-3"
-                  style={{
-                    fontSize: "3rem",
-                    opacity: 0.9,
-                    filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.5))",
-                  }}
-                >
+                <div className="music-icon mb-3" style={{ fontSize: "3rem" }}>
                   {
                     [
                       "🎵",
@@ -140,47 +92,37 @@ const SongDetails = ({ song }) => {
                     ][song.id % 10]
                   }
                 </div>
-                <h5 className="fw-bold mb-2 text-shadow">{song.title}</h5>
-                <p className="mb-1 text-shadow">{song.artist}</p>
-                {song.album !== "Single" && (
-                  <small className="opacity-90 text-shadow">{song.album}</small>
-                )}
+                <h5 className="fw-bold mb-2">{song.title}</h5>
+                <p className="mb-1">{song.artist}</p>
+                {song.album !== "Single" && <small>{song.album}</small>}
               </div>
             </div>
           </Col>
           <Col md={8}>
-            <div className="d-flex flex-column h-100">
+            <div className="d-flex flex-column h-100 p-3">
               <div className="mb-4">
                 <Button
                   variant={
                     isThisSongPlaying ? "outline-danger" : "outline-success"
                   }
-                  size="lg"
                   onClick={handlePlay}
-                >
-                  {isThisSongPlaying ? "⏹️ Stop Preview" : "▶️ Play Preview"}
-                </Button>
-
-                <Button
-                  variant={
-                    isLyricsPlaying ? "outline-danger" : "outline-primary"
-                  }
                   size="lg"
-                  onClick={handleLyricsPlay}
                 >
-                  {isLyricsPlaying ? "⏹️ Stop Lyrics" : "🎵 Play with Lyrics"}
+                  {isThisSongPlaying
+                    ? "⏹️ Stop Preview"
+                    : "▶️ Play Preview with Lyrics"}
                 </Button>
               </div>
+
               <div className="flex-grow-1">
-                <h6 className="text-muted mb-3">Review</h6>
-                <p className="text-muted lh-base">{generateReview(song)}</p>
-                <div className="mt-4">
-                  <LyricsDisplay
-                    song={song}
-                    currentTime={currentPlaybackTime}
-                    isPlaying={isLyricsPlaying}
-                  />
-                </div>
+                <h6 className="text-muted mb-2">Review</h6>
+                <p className="text-muted">{generateReview(song)}</p>
+
+                <LyricsDisplay
+                  song={song}
+                  currentTime={currentPlaybackTime}
+                  isPlaying={isThisSongPlaying}
+                />
               </div>
             </div>
           </Col>
